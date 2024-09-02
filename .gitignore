@@ -1,7 +1,7 @@
 .env
+.env_non_dev
 trash.txt
 test
 venv
 env_Backup
-migrations
 */**/__pycache__

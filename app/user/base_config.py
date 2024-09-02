@@ -3,7 +3,7 @@ from fastapi_users.authentication import CookieTransport
 from fastapi_users.authentication import JWTStrategy
 from fastapi_users.authentication import AuthenticationBackend, JWTStrategy
 from app.user.models import User
-from config import settings
+from app.config import settings
 from app.user.manager import get_user_manager
 
 cookie_transport = CookieTransport(cookie_name = "mentors_cookie", cookie_max_age=settings.COOKIE_MAX_AGE )

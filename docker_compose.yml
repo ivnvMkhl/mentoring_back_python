@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:15
+    container_name: db_app
+    command: -p 5555
+    expose:
+      - 5555
+    env_file:
+      - .env_non_dev
+
+  app:
+    build: 
+      context: .
+    env_file:
+      - .env_non_dev
+    container_name: menti_app
+    command: ["/Menti_app/docker/app.sh"]
+    ports:
+      - 9999:8000
+    depends_on:
+      - db
