@@ -1,4 +1,9 @@
 from fastapi import Depends, FastAPI
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+
+from redis import asyncio as aioredis
+
 import uvicorn  
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
@@ -58,6 +63,11 @@ app.include_router(lesson_router)
 app.include_router(menti_router)
 app.include_router(user_router)
 
+
+@app.lifespan("startup")
+async def startup_event():
+    redis = aioredis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
 
 #Запуск сервера uvicorn
 if __name__ == "__main__":

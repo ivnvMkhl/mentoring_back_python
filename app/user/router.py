@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import APIRouter, Depends
+from fastapi_cache.decorator import cache
 from sqlalchemy import update
 
 from app.database import get_async_session
@@ -14,6 +15,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.get("/{user_id}")
+@cache(expire=60)
 async def get_user_by_id(user_id: int) -> SUserRead | dict:
     result = await UserDAO.find_on_or_none_by_id(user_id)
     if result is None:

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi_cache.decorator import cache
 from app.menti.dao import MentiDAO
 from app.menti.schemas import SMentiAdd, SMenti
 from app.menti.rb import RBMenti
@@ -13,6 +14,7 @@ router = APIRouter(
 )
 
 @router.get("/{menti_id}")
+@cache(expire=60)
 async def get_menti_by_id(menti_id: int) -> SMenti | dict:
     result = await MentiDAO.find_full_data(menti_id)
     if result is None:
@@ -21,6 +23,7 @@ async def get_menti_by_id(menti_id: int) -> SMenti | dict:
 
 
 @router.get("/", summary="get all menti by filter")
+@cache(expire=60)
 async def get_all_lesson(request_body: RBMenti = Depends()) ->list[SMenti]:
     try:
         result = await MentiDAO.find_mentis(**request_body.to_dict())
@@ -32,6 +35,7 @@ async def get_all_lesson(request_body: RBMenti = Depends()) ->list[SMenti]:
 
 
 @router.post("/add_menti")
+@cache(expire=60)
 async def add_menti(menti: SMentiAdd) -> dict:
     check = await MentiDAO.add(**menti.model_dump())
     if check:
