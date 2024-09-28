@@ -1,5 +1,5 @@
 .env
-.env_non_dev
+.env_docker
 trash.txt
 test
 venv
