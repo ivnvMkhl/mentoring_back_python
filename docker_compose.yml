@@ -5,17 +5,20 @@ services:
     command: -p 5555
     expose:
       - 5555
+    ports:
+      - ${DB_PUBLIC_PORT}:5555
     env_file:
-      - .env_non_dev
+      - .env_docker
 
   app:
     build: 
+      network: host
       context: .
     env_file:
-      - .env_non_dev
+      - .env_docker
     container_name: menti_app
-    command: ["/Menti_app/docker/app.sh"]
+    command: ["/mentor_hub_app/bin/run_width_migrations.sh"]
     ports:
-      - 9999:8000
+      - ${APP_PUBLIC_PORT}:8000
     depends_on:
       - db
