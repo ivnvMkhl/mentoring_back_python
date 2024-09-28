@@ -1,0 +1,11 @@
+[Unit]
+Description=MentorHUB
+After=default.target
+
+[Service]
+User=root
+Environment="MAIN_PATH=/root/mentor_app"
+ExecStart=/root/mentor_app/bin/run_container.sh $MAIN_PATH
+
+[Install]
+WantedBy=default.target
