@@ -1,13 +1,16 @@
+from fastapi import Depends
 from sqlalchemy import select, update as sqlalchemy_update, delete as sqlalchemy_delete
 from sqlalchemy.exc import SQLAlchemyError
+from fastapi_users import FastAPIUsers
 
 from app.database import async_session_maker
+from app.user.base_config import *
 
 class BaseDAO:
     model = None
 
     @classmethod
-    async def get_all(cls, **filter_by):
+    async def get_all(cls, **filter_by):  
         async with async_session_maker() as session:
             query = select(cls.model).filter(is_delete = False, **filter_by)
             result = await session.execute(query)
@@ -24,10 +27,12 @@ class BaseDAO:
         Возвращает:
             Экземпляр модели или None, если ничего не найдено.
         """
+        
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(is_delete = False, id = data_id)
             result = await session.execute(query)
             return result.scalar_one_or_none()
+        
         
     @classmethod
     async def find_one_or_none(cls, **filter):
