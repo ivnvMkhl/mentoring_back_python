@@ -21,6 +21,7 @@ from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import settings
 from operator import attrgetter
+from app.user.base_config import current_active_user, current_user
 
 MAIN_API_PREFIX = attrgetter('MAIN_API_PREFIX')(settings)
 
@@ -45,15 +46,14 @@ app.include_router(menti_router, prefix=MAIN_API_PREFIX)
 app.include_router(user_router, prefix=MAIN_API_PREFIX)
 
 
-current_user = fastapi_users.current_user()
-current_active_user = fastapi_users.current_user(active=True)
 
 @app.get(f"{MAIN_API_PREFIX}/protected-route")
 def protected_route(user: User = Depends(current_active_user)):
-    return f"Hello, {user.user_name}"
+    if user:
+        return f"Hello, {user.user_name}"
 
 @app.get(f"{MAIN_API_PREFIX}/upprotected-route")
-def unprotected_route(user: User = Depends(current_user)):
+def unprotected_route(user: User = Depends(current_user)):   # думаю тут надо оставить def unprotected_route():
     return f"Hello, anonymus"
 
 #Запуск сервера uvicorn
